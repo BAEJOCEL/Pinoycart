@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ee4d2d">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PinoyCart — Philippine Shopping</title>
+<style>
+:root{--orange:#ee4d2d;--dark:#222;--muted:#777;--bg:#f5f5f5;--card:#fff;--green:#16a34a}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--dark)}
+header{background:linear-gradient(135deg,#ee4d2d,#ff733f);color:white;position:sticky;top:0;z-index:5}
+.top{max-width:1200px;margin:auto;padding:12px 18px 10px;display:flex;gap:16px;align-items:center}
+.logo{font-size:25px;font-weight:900;white-space:nowrap}.tag{font-size:11px;opacity:.9}
+.search{flex:1;display:flex;background:#fff;border-radius:5px;overflow:hidden}
+.search input{flex:1;border:0;padding:13px;font-size:15px;outline:0}.search button{width:55px;border:0;background:#fff;color:var(--orange);font-size:18px}
+.actions{display:flex;gap:16px;font-size:13px;align-items:center}.cart{cursor:pointer}
+.nav{max-width:1200px;margin:auto;padding:0 18px 11px;display:flex;gap:18px;font-size:13px;overflow:auto}.nav span{white-space:nowrap}
+main{max-width:1200px;margin:auto;padding:18px}.hero{display:grid;grid-template-columns:2fr 1fr;gap:14px}
+.banner{background:linear-gradient(120deg,#ffddd2,#fff2ed);border-radius:10px;padding:30px;min-height:220px;display:flex;align-items:center;justify-content:space-between}
+.banner h1{font-size:38px;margin:0 0 8px}.banner p{color:#666;margin:0 0 18px}.btn{border:0;background:var(--orange);color:#fff;padding:11px 18px;border-radius:5px;font-weight:700;cursor:pointer}
+.side{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mini{background:#fff;border-radius:10px;padding:20px}.mini strong{display:block;font-size:20px;margin-bottom:6px}.section{margin-top:18px}.section h2{font-size:21px;margin:0 0 12px}.cats{display:flex;gap:12px;overflow:auto}.cat{min-width:105px;background:#fff;border-radius:8px;padding:15px 8px;text-align:center;cursor:pointer}.cat .ico{font-size:30px}.cat div:last-child{font-size:13px;margin-top:7px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin:12px 0}.toolbar select{padding:8px;border:1px solid #ddd;background:white;border-radius:5px}
+.products{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.product{background:#fff;border-radius:8px;overflow:hidden;cursor:pointer;transition:.15s}.product:hover{transform:translateY(-2px);box-shadow:0 5px 18px #0001}.pic{height:165px;background:#eee;display:grid;place-items:center;font-size:55px}.info{padding:10px}.name{font-size:14px;height:38px;overflow:hidden}.price{color:var(--orange);font-size:18px;font-weight:800;margin-top:8px}.old{text-decoration:line-through;color:#aaa;font-size:11px;margin-left:4px}.rating{font-size:11px;color:#888;margin-top:6px}
+.drawer{position:fixed;right:-420px;top:0;width:390px;max-width:92vw;height:100%;background:#fff;z-index:20;box-shadow:-8px 0 25px #0003;transition:.25s;padding:20px;display:flex;flex-direction:column}.drawer.open{right:0}.drawer h2{margin-top:0}.items{flex:1;overflow:auto}.item{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid #eee}.item .thumb{width:60px;height:60px;background:#f2f2f2;display:grid;place-items:center;font-size:28px}.qty button{border:1px solid #ddd;background:#fff;width:25px;height:25px}.checkout{padding-top:15px;border-top:1px solid #ddd}.total{font-size:21px;font-weight:800;margin:10px 0;display:flex;justify-content:space-between}.close{position:absolute;right:16px;top:12px;border:0;background:none;font-size:25px;cursor:pointer}
+.toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:12px 18px;border-radius:7px;display:none;z-index:30}
+@media(max-width:900px){.products{grid-template-columns:repeat(3,1fr)}.hero{grid-template-columns:1fr}.side{display:none}.actions span:not(.cart){display:none}}
+@media(max-width:600px){.top{flex-wrap:wrap}.logo{width:100%}.search{order:3;flex-basis:100%}.products{grid-template-columns:repeat(2,1fr)}main{padding:10px}.banner h1{font-size:28px}.banner{min-height:180px;padding:22px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <div class="logo">PinoyCart <span class="tag">PH</span></div>
+    <div class="search"><input id="search" placeholder="Search products, brands and shops"><button onclick="render()">⌕</button></div>
+    <div class="actions"><span>Login</span><span>Sign Up</span><span class="cart" onclick="toggleCart()">🛒 <b id="cartCount">0</b></span></div>
+  </div>
+  <div class="nav"><span>Flash Deals</span><span>Food & Grocery</span><span>Fashion</span><span>Electronics</span><span>Home</span><span>Beauty</span><span>Sports</span><span>₱0 Shipping</span><span>COD</span></div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="banner">
+      <div><h1>Shop Pinoy.<br>Save More.</h1><p>Everyday deals delivered anywhere in the Philippines.</p><button class="btn" onclick="document.getElementById('products').scrollIntoView()">Shop now</button></div>
+      <div style="font-size:85px">🇵🇭🛍️</div>
+    </div>
+    <div class="side">
+      <div class="mini"><strong>🚚 Nationwide</strong><span>Delivery across PH</span></div>
+      <div class="mini"><strong>💵 COD</strong><span>Cash on delivery</span></div>
+      <div class="mini"><strong>🔒 Secure</strong><span>Protected checkout</span></div>
+      <div class="mini"><strong>🎟️ Vouchers</strong><span>Daily discounts</span></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Categories</h2>
+    <div class="cats">
+      <div class="cat" onclick="filterCat('All')"><div class="ico">🔥</div><div>All</div></div>
+      <div class="cat" onclick="filterCat('Fashion')"><div class="ico">👕</div><div>Fashion</div></div>
+      <div class="cat" onclick="filterCat('Electronics')"><div class="ico">📱</div><div>Electronics</div></div>
+      <div class="cat" onclick="filterCat('Home')"><div class="ico">🏠</div><div>Home</div></div>
+      <div class="cat" onclick="filterCat('Beauty')"><div class="ico">💄</div><div>Beauty</div></div>
+      <div class="cat" onclick="filterCat('Grocery')"><div class="ico">🛒</div><div>Grocery</div></div>
+    </div>
+  </section>
+
+  <section class="section" id="products">
+    <div class="toolbar"><h2>Popular products</h2><select id="sort" onchange="render()"><option value="popular">Popular</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option></select></div>
+    <div class="products" id="grid"></div>
+  </section>
+</main>
+
+<aside class="drawer" id="drawer">
+  <button class="close" onclick="toggleCart()">×</button>
+  <h2>Your Cart</h2><div class="items" id="items"></div>
+  <div class="checkout"><div class="total"><span>Total</span><span id="total">₱0</span></div><button class="btn" style="width:100%" onclick="checkout()">Checkout</button></div>
+</aside>
+<div class="toast" id="toast"></div>
+
+<script>
+const products=[
+{id:1,name:'Oversized Cotton T-Shirt',cat:'Fashion',price:249,old:399,icon:'👕',rating:'4.9',sold:'2.1k'},
+{id:2,name:'Wireless Bluetooth Earbuds',cat:'Electronics',price:599,old:999,icon:'🎧',rating:'4.8',sold:'5.7k'},
+{id:3,name:'Stainless Steel Tumbler 500ml',cat:'Home',price:299,old:499,icon:'🥤',rating:'4.9',sold:'3.4k'},
+{id:4,name:'Korean Style Lip Tint',cat:'Beauty',price:179,old:299,icon:'💄',rating:'4.7',sold:'1.8k'},
+{id:5,name:'Instant Coffee 3-in-1 Pack',cat:'Grocery',price:129,old:169,icon:'☕',rating:'4.9',sold:'8.2k'},
+{id:6,name:'Mini Portable Fan USB Rechargeable',cat:'Electronics',price:349,old:499,icon:'🌀',rating:'4.8',sold:'2.9k'},
+{id:7,name:'Non-slip Kitchen Mat',cat:'Home',price:219,old:399,icon:'🧼',rating:'4.6',sold:'1.1k'},
+{id:8,name:'Canvas Casual Sneakers',cat:'Fashion',price:799,old:1299,icon:'👟',rating:'4.8',sold:'3.1k'},
+{id:9,name:'Sunscreen SPF50',cat:'Beauty',price:289,old:450,icon:'🧴',rating:'4.9',sold:'6.4k'},
+{id:10,name:'Premium Rice 5kg',cat:'Grocery',price:349,old:399,icon:'🍚',rating:'4.9',sold:'4.6k'}
+];
+let category='All',cart={};
+function peso(n){return '₱'+n.toLocaleString('en-PH')}
+function render(){
+ let q=document.getElementById('search').value.toLowerCase();
+ let arr=products.filter(p=>(category==='All'||p.cat===category)&&p.name.toLowerCase().includes(q));
+ const s=document.getElementById('sort').value;
+ if(s==='low')arr.sort((a,b)=>a.price-b.price); if(s==='high')arr.sort((a,b)=>b.price-a.price);
+ document.getElementById('grid').innerHTML=arr.map(p=>`<div class="product" onclick="add(${p.id})"><div class="pic">${p.icon}</div><div class="info"><div class="name">${p.name}</div><div class="price">${peso(p.price)} <span class="old">${peso(p.old)}</span></div><div class="rating">⭐ ${p.rating} · ${p.sold} sold</div></div></div>`).join('')||'<p>No products found.</p>';
+}
+function filterCat(c){category=c;render()}
+function add(id){cart[id]=(cart[id]||0)+1;updateCart();toast('Added to cart')}
+function updateCart(){
+ let count=Object.values(cart).reduce((a,b)=>a+b,0);document.getElementById('cartCount').textContent=count;
+ let rows=Object.entries(cart).map(([id,qty])=>{let p=products.find(x=>x.id==id);return `<div class="item"><div class="thumb">${p.icon}</div><div style="flex:1"><b>${p.name}</b><div>${peso(p.price)}</div><div class="qty"><button onclick="change(${p.id},-1)">−</button> ${qty} <button onclick="change(${p.id},1)">+</button></div></div></div>`}).join('');
+ document.getElementById('items').innerHTML=rows||'<p>Your cart is empty.</p>';
+ let total=Object.entries(cart).reduce((sum,[id,q])=>sum+products.find(p=>p.id==id).price*q,0);document.getElementById('total').textContent=peso(total);
+}
+function change(id,n){cart[id]=(cart[id]||0)+n;if(cart[id]<=0)delete cart[id];updateCart()}
+function toggleCart(){document.getElementById('drawer').classList.toggle('open')}
+function checkout(){if(!Object.keys(cart).length){toast('Your cart is empty');return}toast('Demo checkout: connect your payment & delivery backend here.')}
+function toast(t){let x=document.getElementById('toast');x.textContent=t;x.style.display='block';setTimeout(()=>x.style.display='none',1800)}
+render();updateCart();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
+}
+</script>
+</body>
+</html>
